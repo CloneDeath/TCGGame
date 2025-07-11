@@ -4,7 +4,18 @@ extends Node2D
 @export var cell_size: Vector2 = Vector2(64, 64)
 
 func _ready():
+    _center_grid()
     queue_redraw()
+
+func _notification(what):
+    if what == NOTIFICATION_RESIZED:
+        _center_grid()
+        queue_redraw()
+
+func _center_grid():
+    var viewport_size = get_viewport_rect().size
+    var grid_px_size = Vector2(grid_size) * cell_size
+    position = viewport_size / 2 - grid_px_size / 2
 
 func _draw():
     var width = grid_size.x
