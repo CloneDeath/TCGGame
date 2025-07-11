@@ -13,6 +13,20 @@ var tiles: Array = []
 var selected_cell: Vector2i = Vector2i(-1, -1)
 
 @onready var build_menu := $BuildMenu
+@onready var player_wood_label := $PlayerResources/PlayerWood
+@onready var player_gold_label := $PlayerResources/PlayerGold
+@onready var opponent_wood_label := $OpponentResources/OpponentWood
+@onready var opponent_gold_label := $OpponentResources/OpponentGold
+
+var player_resources := {
+    "Wood": 0,
+    "Gold": 0,
+}
+
+var opponent_resources := {
+    "Wood": 0,
+    "Gold": 0,
+}
 
 func _ready():
     queue_redraw()
@@ -23,6 +37,7 @@ func _ready():
     for name in tile_scenes.keys():
         build_menu.add_item(name)
     build_menu.connect("id_pressed", _on_build_menu_id_pressed)
+    _update_resource_labels()
 
 func _draw():
     var width = grid_size.x
@@ -59,3 +74,9 @@ func _on_build_menu_id_pressed(id):
     add_child(tile)
     tile.position = Vector2(selected_cell.x, selected_cell.y) * cell_size
     tiles[selected_cell.y][selected_cell.x] = tile
+
+func _update_resource_labels():
+    player_wood_label.text = "Wood: %d" % player_resources["Wood"]
+    player_gold_label.text = "Gold: %d" % player_resources["Gold"]
+    opponent_wood_label.text = "Wood: %d" % opponent_resources["Wood"]
+    opponent_gold_label.text = "Gold: %d" % opponent_resources["Gold"]
