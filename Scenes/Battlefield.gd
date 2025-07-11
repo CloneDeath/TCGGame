@@ -13,6 +13,10 @@ var tiles: Array = []
 var selected_cell: Vector2i = Vector2i(-1, -1)
 
 @onready var build_menu := $BuildMenu
+@onready var camera := $Camera2D
+
+var dragging := false
+var last_mouse_pos := Vector2.ZERO
 
 func _ready():
     queue_redraw()
@@ -40,15 +44,24 @@ func _draw():
         draw_line(start, end, color)
 
 func _input(event):
-    if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-        var pos = event.position
-        var cell = Vector2i(int(pos.x / cell_size.x), int(pos.y / cell_size.y))
-        if cell.x < 0 or cell.y < 0 or cell.x >= grid_size.x or cell.y >= grid_size.y:
-            return
-        if tiles[cell.y][cell.x] == null:
-            selected_cell = cell
-            build_menu.position = pos
-            build_menu.popup()
+    if event is InputEventMouseButton:
+        if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
+            var pos = event.position
+            var cell = Vector2i(int(pos.x / cell_size.x), int(pos.y / cell_size.y))
+            if cell.x < 0 or cell.y < 0 or cell.x >= grid_size.x or cell.y >= grid_size.y:
+                return
+            if tiles[cell.y][cell.x] == null:
+                selected_cell = cell
+                build_menu.position = pos
+                build_menu.popup()
+        elif event.button_index == MOUSE_BUTTON_RIGHT:
+            dragging = event.pressed
+            if dragging:
+                last_mouse_pos = event.position
+    elif event is InputEventMouseMotion and dragging:
+        var delta = event.position - last_mouse_pos
+        camera.position -= delta
+        last_mouse_pos = event.position
 
 func _on_build_menu_id_pressed(id):
     var name = build_menu.get_item_text(id)
@@ -59,3 +72,4 @@ func _on_build_menu_id_pressed(id):
     add_child(tile)
     tile.position = Vector2(selected_cell.x, selected_cell.y) * cell_size
     tiles[selected_cell.y][selected_cell.x] = tile
+
