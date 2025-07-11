@@ -1,6 +1,0 @@
-[gd_scene load_steps=0 format=3]
-
-[ext_resource type="Script" uid="uid://bgtu0dxjkplu" path="res://scenes/Battlefield.gd" id="1"]
-
-[node name="Battlefield" type="Node2D"]
-script = ExtResource(1)
