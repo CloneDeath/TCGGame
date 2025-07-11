@@ -39,6 +39,11 @@ func _ready():
     build_menu.connect("id_pressed", _on_build_menu_id_pressed)
     _update_resource_labels()
 
+    # Center the battlefield within the viewport
+    var viewport_size = get_viewport_rect().size
+    var grid_pixel_size = Vector2(grid_size) * cell_size
+    position = (viewport_size - grid_pixel_size) / 2
+
 func _draw():
     var width = grid_size.x
     var height = grid_size.y
@@ -56,7 +61,7 @@ func _draw():
 
 func _input(event):
     if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-        var pos = event.position
+        var pos = to_local(event.position)
         var cell = Vector2i(int(pos.x / cell_size.x), int(pos.y / cell_size.y))
         if cell.x < 0 or cell.y < 0 or cell.x >= grid_size.x or cell.y >= grid_size.y:
             return
