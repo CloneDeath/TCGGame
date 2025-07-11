@@ -1,4 +1,4 @@
-[gd_scene load_steps=0 format=3]
+[gd_scene load_steps=2 format=3]
 
 [ext_resource type="Script" uid="uid://bgtu0dxjkplu" path="res://Scenes/Battlefield.gd" id="1"]
 [ext_resource type="Script" path="res://Scenes/CameraDrag.gd" id="2"]
