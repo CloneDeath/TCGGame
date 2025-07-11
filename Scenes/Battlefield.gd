@@ -6,11 +6,11 @@ extends Node2D
 func _ready():
     _center_grid()
     queue_redraw()
+    get_viewport().connect("size_changed", Callable(self, "_on_viewport_size_changed"))
 
-func _notification(what):
-    if what == NOTIFICATION_RESIZED:
-        _center_grid()
-        queue_redraw()
+func _on_viewport_size_changed():
+    _center_grid()
+    queue_redraw()
 
 func _center_grid():
     var viewport_size = get_viewport_rect().size
