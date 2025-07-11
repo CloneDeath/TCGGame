@@ -4,6 +4,7 @@ var battlefield_scene := preload("res://Scenes/Battlefield.tscn")
 const TurnTracker = preload("res://TurnTracker.gd")
 
 var turn_tracker: TurnTracker
+@onready var turn_label := $TurnLabel
 
 func _ready():
     var battlefield = battlefield_scene.instantiate()
@@ -19,4 +20,7 @@ func _input(event):
         turn_tracker.next_turn()
 
 func _on_turn_changed(player):
-    print("Player %d's turn" % (player + 1))
+    var text = "Player %d's turn" % (player + 1)
+    print(text)
+    if is_instance_valid(turn_label):
+        turn_label.text = text
