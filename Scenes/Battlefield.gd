@@ -14,6 +14,20 @@ var selected_cell: Vector2i = Vector2i(-1, -1)
 
 @onready var build_menu := $BuildMenu
 @onready var camera := $Camera2D
+@onready var player_wood_label := $PlayerResources/PlayerWood
+@onready var player_gold_label := $PlayerResources/PlayerGold
+@onready var opponent_wood_label := $OpponentResources/OpponentWood
+@onready var opponent_gold_label := $OpponentResources/OpponentGold
+
+var player_resources := {
+    "Wood": 0,
+    "Gold": 0,
+}
+
+var opponent_resources := {
+    "Wood": 0,
+    "Gold": 0,
+}
 
 var dragging := false
 var last_mouse_pos := Vector2.ZERO
@@ -27,6 +41,12 @@ func _ready():
     for name in tile_scenes.keys():
         build_menu.add_item(name)
     build_menu.connect("id_pressed", _on_build_menu_id_pressed)
+    _update_resource_labels()
+
+    # Center the battlefield within the viewport
+    var viewport_size = get_viewport_rect().size
+    var grid_pixel_size = Vector2(grid_size) * cell_size
+    position = (viewport_size - grid_pixel_size) / 2
 
 func _draw():
     var width = grid_size.x
@@ -46,7 +66,7 @@ func _draw():
 func _input(event):
     if event is InputEventMouseButton:
         if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-            var pos = event.position
+            var pos = to_local(event.position)
             var cell = Vector2i(int(pos.x / cell_size.x), int(pos.y / cell_size.y))
             if cell.x < 0 or cell.y < 0 or cell.x >= grid_size.x or cell.y >= grid_size.y:
                 return
@@ -73,3 +93,8 @@ func _on_build_menu_id_pressed(id):
     tile.position = Vector2(selected_cell.x, selected_cell.y) * cell_size
     tiles[selected_cell.y][selected_cell.x] = tile
 
+func _update_resource_labels():
+    player_wood_label.text = "Wood: %d" % player_resources["Wood"]
+    player_gold_label.text = "Gold: %d" % player_resources["Gold"]
+    opponent_wood_label.text = "Wood: %d" % opponent_resources["Wood"]
+    opponent_gold_label.text = "Gold: %d" % opponent_resources["Gold"]
